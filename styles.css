@@ -1,0 +1,25 @@
+canvas.BG_canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+body.SomeClass {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: rgb(16, 14, 17);
+}
+
+p.someBig {
+    font-size: 500%;
+    color: white;
+}
+
+div.emtpySpace {
+    min-width: 100%;
+    color: white;
+}
+
+.transition {
+    transition: 0.5s;
+}
