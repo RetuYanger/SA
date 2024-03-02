@@ -61,7 +61,7 @@ let rotor_count = 10;
 let particle_count = 4000;
 
 
-let R = 60;
+let R = 100;
 
 function set_bg_params(rf, rc, pc){
     rotor_force = rf;
