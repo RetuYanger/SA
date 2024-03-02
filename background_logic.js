@@ -116,11 +116,18 @@ class bg_particle{
         this.phase = Math.random()*2*Math.PI;
     }
 
-    get_dens(){
+    get_dens(A){
         if (!this.densHave){
             let S = 0;
-            for (i = 0; i < rotator_array.length; i++) {
-                S += rotator_array[i].get_dens(this.pos[0], this.pos[1])/rotator_array.length;
+            if (A){
+                for (i = 0; i < rotator_array.length; i++) {
+                    S += rotator_array[i].get_dens(this.pos[0], this.pos[1])/rotator_array.length;
+                }
+            }
+            else{
+                for (i = 0; i < rotator_array.length; i++) {
+                    S += rotator_array[i].get_dens(this.last_pos[0], this.last_pos[1])/rotator_array.length;
+                }
             }
             this.dens = Dsigmoid(S);
             //this.densHave = true;
@@ -132,12 +139,14 @@ class bg_particle{
         if (this.t >= 1.5){
             this.t = Math.random();
             this.last_pos = [Math.random()*document.documentElement.scrollWidth, Math.random()*document.documentElement.scrollHeight]
+            this.pos[0] = this.last_pos[0];
+            this.pos[1] = this.last_pos[1];
         }
         this.v += this.mv;
         this.t += 0.01
         
         this.ph += Math.abs(this.v)*0.1;
-        this.get_dens()
+        this.get_dens(true)
         let I = sigmoid(this.ph - 9.0)
         let red = I * this.dens;
         let black = 1.0 - I * (1 - red);
@@ -167,7 +176,7 @@ function reload_bg() {
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    for (i = 0; i < 50; i++){
+    for (i = 0; i < 150; i++){
         bg_particle_array.push(new bg_particle([255, 100, 100], 
             Math.random()*document.documentElement.scrollWidth,
             Math.random()*document.documentElement.scrollHeight));
