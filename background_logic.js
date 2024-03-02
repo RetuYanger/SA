@@ -27,25 +27,6 @@ const bg_canvas = document.getElementById("Back_canvas");
 
 var X_pos = Math.random()*document.documentElement.scrollWidth;
 var Y_pos = Math.random()*document.documentElement.scrollHeight;
-document.onmousemove = function(e) {
-    X_pos = e.pageX;
-    Y_pos = e.pageY;
-    let j = 0;
-    let mv = 1000000;
-
-    let j1 = 0;
-    let mv1 = 1000000;
-
-    for (let n = 0; n < bg_particle_array.length; n++) {        
-        j1 = n;
-        mv1 = distance(bg_particle_array[n].pos, [X_pos, Y_pos]);
-        if (mv1 < mv){
-            mv = mv1;
-            j = j1;
-        }
-    }
-    bg_particle_array[j].mv = 100.5;
-}
 
 const bg_ctx = bg_canvas.getContext("2d");
 let bg_particle_array = [];
@@ -131,18 +112,8 @@ class bg_particle{
         this.ph = 0.0;
         this.dens = 0.0;
         this.densHave = false;
-        this.t = 0.0;
+        this.t = Math.random();
         this.phase = Math.random()*2*Math.PI;
-    }
-
-    update_movement() {
-        
-        /*this.mv *= 0.99;
-        let S = 0.0;
-        for (i = 0; i < this.p.length; i++){
-            S += this.p[i].v / this.p.length;
-        }
-        this.mv += S*(0.2*(this.get_dens()) + 0.8) - this.v;*/
     }
 
     get_dens(){
@@ -158,6 +129,10 @@ class bg_particle{
     }
 
     update_position() {
+        if (this.t >= 1.5){
+            this.t = Math.random();
+            this.last_pos = [Math.random()*document.documentElement.scrollWidth, Math.random()*document.documentElement.scrollHeight]
+        }
         this.v += this.mv;
         this.t += 0.01
         
@@ -177,19 +152,11 @@ class bg_particle{
         
         
         let color = "rgba(" + String(this.color[0]) + "," + String(this.color[1]) + "," + String(this.color[2])  + "," + String(this.alpha)+ ")";
-        draw_circle(bg_ctx, color, this.pos[0], this.pos[1], R*amp)
+        draw_circle(bg_ctx, color, this.pos[0], this.pos[1], R)
     }
 }
 
 function update_bg_logic(){
-    for (let n = 0; n < bg_particle_array.length; n++) {
-        bg_particle_array[n].update_movement();
-    }
-    
-    /*S *= 255;
-    bg_ctx.fillStyle = "rgba(" + String(S) + "," + String(S) + "," + String(S)  + "," + '1.0'+ ")";
-    bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);*/
-
     for (let n = 0; n < bg_particle_array.length; n++) {
         bg_particle_array[n].update_position();
     }
@@ -200,7 +167,7 @@ function reload_bg() {
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    for (i = 0; i < 500; i++){
+    for (i = 0; i < 50; i++){
         bg_particle_array.push(new bg_particle([255, 100, 100], 
             Math.random()*document.documentElement.scrollWidth,
             Math.random()*document.documentElement.scrollHeight));
@@ -218,18 +185,6 @@ function reload_bg() {
             }
         }
     }
-    /*for (i = 0; i < bg_particle_array.length; i++){
-        A = bg_particle_array[i].pos
-        if (bg_particle_array[i].length == 0){
-        for (j = 0; j < bg_particle_array.length; j++){
-            if (j != i){
-                B = bg_particle_array[j].pos
-                if (distance(A, B) < R*10 && distance(A, B) >= R*5.1){
-                    bg_particle_array[i].p.push(bg_particle_array[j])
-                }
-            }
-        }}
-    }*/
 
     rotator_array.push(new somePot(0.5* bg_canvas.width, 0.5* bg_canvas.height));
 
