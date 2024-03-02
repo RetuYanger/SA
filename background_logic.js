@@ -25,13 +25,9 @@ function draw_line(ctx, color, start_x, start_y, end_x, end_y){
 
 const bg_canvas = document.getElementById("Back_canvas");
 
-var X_pos = 0.;
-var Y_pos = 0.;
-var X_posL = 0.;
-var Y_posL = 0.;
+var X_pos = Math.random()*document.documentElement.scrollWidth;
+var Y_pos = Math.random()*document.documentElement.scrollHeight;
 document.onmousemove = function(e) {
-    X_posL = X_pos;
-    Y_posL = Y_pos;
     X_pos = e.pageX;
     Y_pos = e.pageY;
     let j = 0;
@@ -61,7 +57,7 @@ let rotor_count = 10;
 let particle_count = 4000;
 
 
-let R = document.documentElement.scrollWidth/15.0;
+let R = document.documentElement.scrollWidth/10.0;
 
 function set_bg_params(rf, rc, pc){
     rotor_force = rf;
@@ -225,8 +221,8 @@ function reload_bg() {
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    for (x = 0; x < document.documentElement.scrollWidth + R; x += R){
-        for (y = 0; y < document.documentElement.scrollHeight + R; y += R){
+    for (x = -R; x < document.documentElement.scrollWidth + R; x += R){
+        for (y = -R; y < document.documentElement.scrollHeight + R; y += R){
             bg_particle_array.push(new bg_particle([255, 100, 100], x, y));
         }
     }
