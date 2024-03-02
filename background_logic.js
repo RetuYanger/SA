@@ -61,7 +61,7 @@ let rotor_count = 10;
 let particle_count = 4000;
 
 
-let R = 100;
+let R = document.documentElement.scrollWidth/15.0;
 
 function set_bg_params(rf, rc, pc){
     rotor_force = rf;
@@ -143,7 +143,7 @@ class bg_particle{
         let q;
         for (i = 0; i < this.p.length; i++){
             D = [this.p[i].pos[0] - this.pos[0], this.p[i].pos[1] - this.pos[1]];
-            q = -2.0 * (sigmoid(R-LEN(D[0], D[1])) - 0.5);
+            q = -1.0 * (sigmoid(R-LEN(D[0], D[1])) - 0.5);
             D = normalize(D[0], D[1]);
             this.movement = [this.movement[0] + D[0]*q, this.movement[1] + D[1]*q]
         }
@@ -173,7 +173,7 @@ class bg_particle{
     }
 
     get_dens(){
-        if (true){
+        if (!this.densHave){
             let S = 0;
             for (i = 0; i < rotator_array.length; i++) {
                 S += rotator_array[i].get_dens(this.pos[0], this.pos[1])/rotator_array.length;
