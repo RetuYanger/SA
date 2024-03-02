@@ -126,8 +126,8 @@ class bg_particle{
         this.movement = [0, 0];
         this.p = [];
         this.alpha = 1.0 ;
-        this.v = 0.0;
-        this.mv = 0.0;
+        this.v = 1.0;
+        this.mv = 1.0;
         this.ph = 0.0;
         this.dens = 0.0;
         this.densHave = false;
@@ -137,12 +137,12 @@ class bg_particle{
 
     update_movement() {
         
-        this.mv *= 0.99;
+        /*this.mv *= 0.99;
         let S = 0.0;
         for (i = 0; i < this.p.length; i++){
             S += this.p[i].v / this.p.length;
         }
-        this.mv += S*(0.2*(this.get_dens()) + 0.8) - this.v;
+        this.mv += S*(0.2*(this.get_dens()) + 0.8) - this.v;*/
     }
 
     get_dens(){
@@ -200,12 +200,7 @@ function reload_bg() {
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    for (x = -0; x < document.documentElement.scrollWidth + R; x += 400){
-        for (y = -0; y < document.documentElement.scrollHeight + R; y += 400){
-            bg_particle_array.push(new bg_particle([255, 100, 100], x, y));
-        }   
-    }
-    for (i = 0; i < 250; i++){
+    for (i = 0; i < 500; i++){
         bg_particle_array.push(new bg_particle([255, 100, 100], 
             Math.random()*document.documentElement.scrollWidth,
             Math.random()*document.documentElement.scrollHeight));
@@ -217,7 +212,7 @@ function reload_bg() {
         for (j = 0; j < bg_particle_array.length; j++){
             if (j != i){
                 B = bg_particle_array[j].pos
-                if (distance(A, B) < R*20.1){
+                if (distance(A, B) < R*6.1){
                     bg_particle_array[i].p.push(bg_particle_array[j])
                 }
             }
