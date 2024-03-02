@@ -196,44 +196,45 @@ function update_bg_logic(){
 }
 
 function reload_bg() {
-    bg_ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+    bg_ctx.fillStyle = 'rgba(0, 0, 0, 1)';
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    /*for (x = -R; x < document.documentElement.scrollWidth + R; x += R){
-        for (y = -R; y < document.documentElement.scrollHeight + R; y += R){
+    for (x = -0; x < document.documentElement.scrollWidth + R; x += 400){
+        for (y = -0; y < document.documentElement.scrollHeight + R; y += 400){
             bg_particle_array.push(new bg_particle([255, 100, 100], x, y));
-        }
-    }*/
-    for (i = 0; i < 500; i++){
+        }   
+    }
+    for (i = 0; i < 250; i++){
         bg_particle_array.push(new bg_particle([255, 100, 100], 
             Math.random()*document.documentElement.scrollWidth,
             Math.random()*document.documentElement.scrollHeight));
     }
+    console.log(bg_particle_array.length)
 
     for (i = 0; i < bg_particle_array.length; i++){
         A = bg_particle_array[i].pos
         for (j = 0; j < bg_particle_array.length; j++){
             if (j != i){
                 B = bg_particle_array[j].pos
-                if (distance(A, B) < R*5.1){
+                if (distance(A, B) < R*20.1){
                     bg_particle_array[i].p.push(bg_particle_array[j])
                 }
             }
         }
     }
-    for (i = 0; i < bg_particle_array.length; i++){
+    /*for (i = 0; i < bg_particle_array.length; i++){
         A = bg_particle_array[i].pos
         if (bg_particle_array[i].length == 0){
         for (j = 0; j < bg_particle_array.length; j++){
             if (j != i){
                 B = bg_particle_array[j].pos
-                if (distance(A, B) < R*6.1){
+                if (distance(A, B) < R*10 && distance(A, B) >= R*5.1){
                     bg_particle_array[i].p.push(bg_particle_array[j])
                 }
             }
         }}
-    }
+    }*/
 
     rotator_array.push(new somePot(0.5* bg_canvas.width, 0.5* bg_canvas.height));
 
