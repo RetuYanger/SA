@@ -57,7 +57,7 @@ let rotor_count = 10;
 let particle_count = 4000;
 
 
-let R = document.documentElement.scrollWidth/10.0;
+let R = document.documentElement.scrollWidth/50.0;
 
 function set_bg_params(rf, rc, pc){
     rotor_force = rf;
@@ -131,10 +131,12 @@ class bg_particle{
         this.ph = 0.0;
         this.dens = 0.0;
         this.densHave = false;
+        this.t = 0.0;
+        this.phase = Math.random()*2*Math.PI;
     }
 
     update_movement() {
-        this.movement = [this.movement[0]*0.96, this.movement[1]*0.96];
+        /*this.movement = [this.movement[0]*0.96, this.movement[1]*0.96];
         let D;
         let q;
         for (i = 0; i < this.p.length; i++){
@@ -158,7 +160,7 @@ class bg_particle{
             q = -R*0.25/l;
             this.movement[0] += D[0]*q;
             this.movement[1] += D[1]*q;
-        }
+        }*/
         
         this.mv *= 0.99;
         let S = 0.0;
@@ -175,19 +177,22 @@ class bg_particle{
                 S += rotator_array[i].get_dens(this.pos[0], this.pos[1])/rotator_array.length;
             }
             this.dens = Dsigmoid(S);
+            //this.densHave = true;
         }
         return this.dens;
     }
 
     update_position() {
-        this.pos[0] += this.movement[0];
-        this.pos[1] += this.movement[1];
         this.v += this.mv;
-
+        this.t += 0.01
+        
         this.ph += Math.abs(this.v)*0.1;
-
-        let red = sigmoid(this.ph - 9.0) * this.get_dens();
-        let black = 1.0 - sigmoid(this.ph - 9.0) * (1 - red);
+        this.get_dens()
+        let I = sigmoid(this.ph - 9.0)
+        this.pos[0] = Math.sin(10.0*this.t*I - 0.01*this.v + this.phase)*R*(1 - (this.dens*0.7 + 0.3)) + this.last_pos[0];
+        this.pos[1] = Math.cos(10.0*this.t*I - 0.01*this.v + this.phase)*R*(1 - (this.dens*0.7 + 0.3)) + this.last_pos[1];
+        let red = I * this.dens;
+        let black = 1.0 - I * (1 - red);
         this.color[0] = 255*(red + black);
         this.color[1] = 255*black;
         this.color[2] = 255*black;
@@ -196,15 +201,13 @@ class bg_particle{
         
         
         let color = "rgba(" + String(this.color[0]) + "," + String(this.color[1]) + "," + String(this.color[2])  + "," + String(this.alpha)+ ")";
-        draw_circle(bg_ctx, color, this.pos[0], this.pos[1], R/1.5)
+        draw_circle(bg_ctx, color, this.pos[0], this.pos[1], R*2)
     }
 }
 
 function update_bg_logic(){
-    let S = 0;
     for (let n = 0; n < bg_particle_array.length; n++) {
         bg_particle_array[n].update_movement();
-        S += (bg_particle_array[n].color[0] + bg_particle_array[n].color[1] + bg_particle_array[n].color[2])/3.0 / bg_particle_array.length;
     }
     
     /*S *= 255;
@@ -221,23 +224,23 @@ function reload_bg() {
     bg_ctx.fillRect(0, 0, bg_canvas.width, bg_canvas.height);
     bg_particle_array = [];
     rotator_array = [];
-    for (x = -R; x < document.documentElement.scrollWidth + R; x += R){
+    /*for (x = -R; x < document.documentElement.scrollWidth + R; x += R){
         for (y = -R; y < document.documentElement.scrollHeight + R; y += R){
             bg_particle_array.push(new bg_particle([255, 100, 100], x, y));
         }
-    }
-    /*for (i = 0; i < 1000; i++){
+    }*/
+    for (i = 0; i < 1000; i++){
         bg_particle_array.push(new bg_particle([255, 100, 100], 
             Math.random()*document.documentElement.scrollWidth,
             Math.random()*document.documentElement.scrollHeight));
-    }*/
+    }
 
     for (i = 0; i < bg_particle_array.length; i++){
         A = bg_particle_array[i].pos
         for (j = 0; j < bg_particle_array.length; j++){
             if (j != i){
                 B = bg_particle_array[j].pos
-                if (distance(A, B) < R*1.1){
+                if (distance(A, B) < R*5.1){
                     bg_particle_array[i].p.push(bg_particle_array[j])
                 }
             }
